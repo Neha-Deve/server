@@ -25,6 +25,24 @@ app.get('/',async (req,res)=>{
 
     res.json(AllUsers)
 })
+app.get('/search',async (req,res)=>{
+    const AllUsers=await userModel.find({name:req.query.keyword})
+    res.status(200).json(AllUsers)
+})
+app.delete('/:id',async (req,res)=>{
+    try {
+        const deletedUser = await userModel.findByIdAndRemove(req.params.id);
+    
+        if (!deletedUser) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+    
+        res.status(200).json({ message: 'User deleted successfully' });
+      } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+})
 app.listen(5000,()=>{
     console.log("listenning at port 5000")
 })
